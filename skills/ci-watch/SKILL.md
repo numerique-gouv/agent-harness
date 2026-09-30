@@ -1,6 +1,6 @@
 ---
 name: ci-watch
-description: Puts a pull request's CI under watch in the background, then reads its verdict and iterates until green. A red check is a fix to make; code scanning is read separately; the same check red twice, or an infrastructure failure, stops. Invoke right after pushing to a PR — review-loop and rewrite-history call it. Triggers: "watch the CI", "wait for CI on this PR", "is the CI green?".
+description: Puts a pull request's CI under watch in the background, then reads its verdict and iterates until green. A red check is a fix to make; code scanning is read separately; the same check red twice, or an infrastructure failure, stops. Invoke right after pushing to a PR — review-loop calls it. Triggers: "watch the CI", "wait for CI on this PR", "is the CI green?".
 ---
 
 # ci-watch

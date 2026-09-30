@@ -1,13 +1,13 @@
 ---
 name: review-loop
-description: Review → fix loop on an already-open pull request, repeated until a pass confirms no blocking finding, then rewrites the branch history. Fresh-context reviewers, fixes made by the author, CI watched in the background. Works on any PR, alone or called by a shipping skill. Triggers: "/review-loop", "run the review loop on this PR", "review and fix this PR until it's clean".
+description: Review → fix loop on an already-open pull request, repeated until a pass confirms no blocking finding. Fresh-context reviewers, fixes made by the author, CI watched in the background. Works on any PR, alone or called by a shipping skill. Triggers: "/review-loop", "run the review loop on this PR", "review and fix this PR until it's clean".
 ---
 
 # review-loop
 
 Runs `code → review → fix → review → fix → …` on an open pull request until it converges. The PR must already exist: this skill does not push the branch into existence, does not rewrite the final PR description, posts no summary comment and reports nothing to the user in chat. It **returns** to its caller what happened — passes run, review file written, what was fixed and what was rejected in each pass, ambiguous findings awaiting a decision — and the caller decides how to relay it.
 
-It relies on two companion skills shipped alongside it: [`ci-watch`](../ci-watch/SKILL.md) and [`rewrite-history`](../rewrite-history/SKILL.md).
+It relies on a companion skill shipped alongside it: [`ci-watch`](../ci-watch/SKILL.md).
 
 ## Input
 
@@ -44,11 +44,9 @@ Repeat as long as the last pass confirmed at least one **blocking** finding; sto
 
 6. Was a blocking finding confirmed in this pass (review **or** CI)?
    - Yes → back to step 1 for a new pass — unless five passes have followed one another without any bounce or oscillation showing from one to the next: [`non-convergence.md`](non-convergence.md) then says to stop and report, with the cost.
-   - No → leave only once the CI of the last push is **green**: this is the one moment it is actually waited for. Red → blocking, back to step 1. Green → go to step 7.
+   - No → leave only once the CI of the last push is **green**: this is the one moment it is actually waited for. Red → blocking, back to step 1. Green → return to the caller.
 
    **And the review file exists on disk, one section per pass**: an `ls <reviews-dir>` before leaving, not the memory of having written it. If it is missing, the pass never happened for anyone else — write it from what you have, then carry on. Without it, the false positives of a pass are relayed to nobody, and the next loop on the same code pays for them again.
-
-7. **Rewrite the history**: invoke the `rewrite-history` skill, which backs up, rewrites, checks the tree, pushes with `--force-with-lease` and waits for the CI of the new SHA. Red is a blocking finding like any other: back to step 1. Then return to the caller.
 
 ## Guardrails
 

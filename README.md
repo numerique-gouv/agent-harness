@@ -9,7 +9,7 @@ Pick one route: installing through two of them leaves you with every skill twice
 <details open>
 <summary><strong>Any agent, with the <code>skills</code> CLI</strong></summary>
 
-[`skills`](https://github.com/vercel-labs/skills) installs into Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode, Claude Code and [many more](https://github.com/vercel-labs/skills#supported-agents). It asks which skills and which agents; take all three skills, since `review-loop` calls the other two.
+[`skills`](https://github.com/vercel-labs/skills) installs into Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode, Claude Code and [many more](https://github.com/vercel-labs/skills#supported-agents). It asks which skills and which agents; take both skills, since `review-loop` calls `ci-watch`.
 
 ```bash
 npx skills@latest add numerique-gouv/agent-harness
@@ -102,11 +102,10 @@ Run it again to update. For another agent that supports sub-agents, copy the bod
 
 | Skill | What it does |
 | --- | --- |
-| [`review-loop`](skills/review-loop/SKILL.md) | Review → fix on an open PR until a pass confirms no blocking finding, then rewrites the history. Fresh-context reviewers, fixes by the author, CI watched in the background |
+| [`review-loop`](skills/review-loop/SKILL.md) | Review → fix on an open PR until a pass confirms no blocking finding. Fresh-context reviewers, fixes by the author, CI watched in the background |
 | [`ci-watch`](skills/ci-watch/SKILL.md) | Watches a PR's CI in the background, reads its verdict and iterates until green; stops on the same check failing twice or on an infrastructure failure |
-| [`rewrite-history`](skills/rewrite-history/SKILL.md) | Rewrites a branch into a short, readable list of commits: backup tag, identical tree, every commit parses, `--force-with-lease` |
 
-`review-loop` calls the other two; they also work on their own. Ask your agent to run one by name ("run review-loop on this PR"), or use its slash command where it has one.
+`review-loop` calls `ci-watch`, which also works on its own. Ask your agent to run one by name ("run review-loop on this PR"), or use its slash command where it has one.
 
 ## Adapting `review-loop` to a project
 
