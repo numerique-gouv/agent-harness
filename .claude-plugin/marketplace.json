@@ -1,0 +1,17 @@
+{
+  "name": "numerique-gouv",
+  "owner": {
+    "name": "numerique-gouv",
+    "url": "https://github.com/numerique-gouv"
+  },
+  "description": "Reusable Claude Code skills and agents from numerique-gouv.",
+  "plugins": [
+    {
+      "name": "agent-harness",
+      "source": "./",
+      "description": "A review → fix loop that converges on open pull requests, with background CI watching.",
+      "category": "engineering",
+      "keywords": ["code-review", "pull-request", "ci", "git"]
+    }
+  ]
+}

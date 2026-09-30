@@ -1,0 +1,16 @@
+{
+  "name": "agent-harness",
+  "version": "0.1.0",
+  "description": "Reusable agent skills for shipping pull requests: a converging review loop and background CI watching.",
+  "author": {
+    "name": "numerique-gouv",
+    "url": "https://github.com/numerique-gouv"
+  },
+  "repository": "https://github.com/numerique-gouv/agent-harness",
+  "keywords": ["code-review", "pull-request", "ci", "git"],
+  "skills": [
+    "./skills/review-loop",
+    "./skills/ci-watch",
+    "./skills/setup-review-loop"
+  ]
+}
