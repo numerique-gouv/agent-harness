@@ -13,7 +13,7 @@ Read at step 2 of every pass, before composing the batch.
 
 ## Who reviews: fresh reviewers, never you
 
-**The reviewers are the six sub-agents of Anthropic's [pr-review-toolkit](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit)**, installed in your agent as [the harness README](https://github.com/numerique-gouv/agent-harness#install-the-reviewers) says. If they are not installed, say so, point to that section, and stop rather than improvising a review yourself: they carry the correctness review, on which the very notion of a blocking finding depends.
+**The reviewers are the six sub-agents of Anthropic's [pr-review-toolkit](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit)**, installed in your agent as [the install guide](https://github.com/numerique-gouv/agent-harness/blob/main/docs/install_review_loop.md#install-the-reviewers) says. If they are not installed, say so, point to that section, and stop rather than improvising a review yourself: they carry the correctness review, on which the very notion of a blocking finding depends.
 
 Each runs in a fresh context: never a fork of your own conversation, and never yourself — you wrote the code, and the point of the review is an eye that did not. Where your agent lets you choose the reviewers' model, pick it deliberately rather than letting them inherit yours: a smaller, faster one is usually enough, and cheaper for a batch that reads the whole diff several times over.
 
@@ -38,9 +38,9 @@ Launch in parallel where your agent allows it:
 
 ## Project-specific reviewers
 
-A project may ask, in its agent instructions, for extra reviewers with the condition that triggers each — for instance an architecture reviewer such as `layered-rails-reviewer`, from the [layered-rails](https://github.com/palkan/skills) skills, whenever the diff touches Ruby under `app/`. Add them to the same batch, on the same terms: a fresh context, never your own.
+A project may ask, in its agent instructions, for extra reviewers with the condition that triggers each — for instance an architecture reviewer such as `layered-rails-reviewer`, from [layered-rails](https://github.com/palkan/layered-rails-skills), whenever the diff touches Ruby under `app/`. Add them to the same batch, on the same terms: a fresh context, never your own.
 
-Architecture reviewers of that kind find what the six reviewers above do not look for — inverted dependencies, business logic stranded in a controller, abstractions straddling two layers — and their findings are **non-blocking by default**, as [`blocking.md`](blocking.md) says. Without that rule, the loop would restart on design disagreements.
+Their confirmed findings are **blocking**, as [`blocking.md`](blocking.md) says: the project asked for them to enforce its own rules.
 
 If a project-specific reviewer is not available, say so and carry on with the others.
 
