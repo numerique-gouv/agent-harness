@@ -39,6 +39,10 @@ Add `-g` to install for your user rather than for the current project. Pull late
 /plugin install pr-review-toolkit@claude-plugins-official
 ```
 
+On another agent, ask it to install them itself, in its own sub-agent format:
+
+> Install the six agents of https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit/agents as your own sub-agents, keeping their names and prompts.
+
 ## Prerequisites
 
 - The [`gh`](https://cli.github.com) CLI, authenticated on the repository.
