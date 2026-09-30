@@ -1,6 +1,6 @@
 ---
 name: review-loop
-description: Review → fix loop on an already-open pull request, repeated until a pass confirms no blocking finding, then rewrites the branch history. Fresh-context Sonnet reviewers, fixes made by the author, CI watched in the background. Works on any PR, alone or called by a shipping skill. Triggers: "/review-loop", "run the review loop on this PR", "review and fix this PR until it's clean".
+description: Review → fix loop on an already-open pull request, repeated until a pass confirms no blocking finding, then rewrites the branch history. Fresh-context reviewers, fixes made by the author, CI watched in the background. Works on any PR, alone or called by a shipping skill. Triggers: "/review-loop", "run the review loop on this PR", "review and fix this PR until it's clean".
 ---
 
 # review-loop
@@ -15,12 +15,12 @@ The PR URL, as an argument. Without one, derive it with `gh pr view --json url -
 
 ## Project settings
 
-Read the project's `CLAUDE.md` / `AGENTS.md` before the first pass, and take from it, when present:
+Read the project's agent instructions (`AGENTS.md`, `CLAUDE.md`, or whatever file your agent loads) before the first pass, and take from it, when present:
 
 - **the test command** (`make test`, `npm test`, `bundle exec rspec`…); without one, look for the obvious runner of the stack and say which one you used;
 - **the specifications the project implements**, if any — they decide what counts as a normative violation in [`blocking.md`](blocking.md) and where to look for the general rule in [`non-convergence.md`](non-convergence.md);
 - **extra reviewers** the project asks for, with their condition — see [`reviewers.md`](reviewers.md#project-specific-reviewers);
-- **where review files go**, if the project names a directory; otherwise `.claude/reviews/`.
+- **where review files go**, if the project names a directory; otherwise `.scratch/reviews/`.
 
 ## The loop
 
@@ -28,13 +28,13 @@ Repeat as long as the last pass confirmed at least one **blocking** finding; sto
 
 1. **Put CI under watch, without waiting for it**: invoke the `ci-watch` skill, then move straight on to step 2. Its verdict is collected at step 4b and required at step 6.
 
-2. **Launch the review** on the PR's full diff, with the reviewer batch of [`reviewers.md`](reviewers.md) — which agents on which condition, what each prompt says, the budget. Conditions are evaluated on the evidence (`gh pr diff <url> --name-only`), never from memory; `code-reviewer` and `code-simplifier` run on every pass; every agent runs with `model: "sonnet"`, fresh context, and the order to modify nothing. Their verdicts are merged into a single list of findings before step 3.
+2. **Launch the review** on the PR's full diff, with the reviewer batch of [`reviewers.md`](reviewers.md) — who reviews, which roles on which condition, what each prompt says, the budget. Conditions are evaluated on the evidence (`gh pr diff <url> --name-only`), never from memory; `code-reviewer` and `code-simplifier` run on every pass; every reviewer runs in a fresh context, with the order to modify nothing. Their verdicts are merged into a single list of findings before step 3.
 
-3. **Write the review file** at `<reviews-dir>/YYYY-MM-DD-<topic>.md` in the main checkout as soon as the findings arrive, before handling any of them — even with no finding at all, with one line saying the review passed clean. **Mandatory header: the scope reviewed and the list of agents launched, with the condition that triggered each** — this is what makes a shrinking batch visible from one pass to the next instead of discovered afterwards. From the second pass on, each pass is appended **to the same file** under a `# Pass n` heading — one file per PR, not one per pass.
+3. **Write the review file** at `<reviews-dir>/YYYY-MM-DD-<topic>.md` in the main checkout as soon as the findings arrive, before handling any of them — even with no finding at all, with one line saying the review passed clean. **Mandatory header: the scope reviewed and the list of reviewers launched, with the condition that triggered each** — this is what makes a shrinking batch visible from one pass to the next instead of discovered afterwards. From the second pass on, each pass is appended **to the same file** under a `# Pass n` heading — one file per PR, not one per pass.
 
-4. **Handle the findings one by one** — yourself, in your own context, not through a fresh sub-agent. The review is deliberately given to a context-free Sonnet for an independent eye; the fix stays with the author of the implementation, who already holds the context it needs. From most to least severe: re-read the cited code, confirm or reject each finding on the evidence (never on the agent's summary alone), and classify it blocking / non-blocking according to [`blocking.md`](blocking.md). Classification is entirely the job of whoever runs the loop, and it is the easiest thing here to get wrong.
+4. **Handle the findings one by one** — yourself, in your own context, not through a fresh sub-agent. The review is deliberately given to context-free reviewers for an independent eye; the fix stays with the author of the implementation, who already holds the context it needs. From most to least severe: re-read the cited code, confirm or reject each finding on the evidence (never on the reviewer's summary alone), and classify it blocking / non-blocking according to [`blocking.md`](blocking.md). Classification is entirely the job of whoever runs the loop, and it is the easiest thing here to get wrong.
    - Confirmed (blocking or not) → fix it directly, as [`fixing.md`](fixing.md) says — the most mechanical fix possible, every external fact checked as it is written — one commit per coherent group. Both categories get fixed; only a blocking one forces another pass.
-   - False positive → leave the code alone; record why in one line, under a **"Rejected"** section of this pass in the review file. It feeds the final report, and it is appended to the prompt of the next pass's agents: that is the only place they can learn it from.
+   - False positive → leave the code alone; record why in one line, under a **"Rejected"** section of this pass in the review file. It feeds the final report, and it is appended to the prompt of the next pass's reviewers: that is the only place they can learn it from.
    - Ambiguous, or committing to a design choice → stop and ask; do not decide in the user's place — whatever the pass.
    - A blocking finding that looks like one from an earlier pass → read [`non-convergence.md`](non-convergence.md) before treating it as routine: a bounce, an oscillation or a ratchet call for stepping back, not one more local fix.
 
@@ -52,6 +52,6 @@ Repeat as long as the last pass confirmed at least one **blocking** finding; sto
 
 ## Guardrails
 
-- **A pass launching fewer than two agents is an execution bug**, never a legitimate optimisation. A pass is budgeted, never trimmed — when the budget no longer allows a full pass, stop the loop cleanly, PR pushed, findings recorded.
-- **A blocking finding is read in cited code**, never in an agent's summary, a comment or documentation.
+- **A pass launching fewer than two reviewers is an execution bug**, never a legitimate optimisation. A pass is budgeted, never trimmed — when the budget no longer allows a full pass, stop the loop cleanly, PR pushed, findings recorded.
+- **A blocking finding is read in cited code**, never in a reviewer's summary, a comment or documentation.
 - **"Verified" is said only of what was seen failing, then passing.** Announcing a verification that was not done is the one flaw that makes this loop useless — everything else is caught at the next pass.

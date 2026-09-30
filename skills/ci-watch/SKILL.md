@@ -9,7 +9,7 @@ Input: the PR URL or number. CI is one more reviewer, not a red light to wait at
 
 ## 1. Watch, without waiting
 
-Run `gh pr checks <url> --watch` **in the background** (`Bash` with `run_in_background: true`), then carry on with whatever is left to do. In the seconds after a push, `gh pr checks` answers `no checks reported`: the workflows are not registered yet. Wait for that condition rather than guessing a delay — `timeout 120 sh -c 'until gh pr checks <n> >/dev/null 2>&1; do sleep 5; done'` before the `--watch`. CI and review work on the same diff without depending on each other; running them in parallel saves a full CI run per pass.
+Run `gh pr checks <url> --watch` **in the background** if your agent can run a command without blocking on it, then carry on with whatever is left to do. In the seconds after a push, `gh pr checks` answers `no checks reported`: the workflows are not registered yet. Wait for that condition rather than guessing a delay — `timeout 120 sh -c 'until gh pr checks <n> >/dev/null 2>&1; do sleep 5; done'` before the `--watch`. CI and review work on the same diff without depending on each other; running them in parallel saves a full CI run per pass.
 
 **This holds from the first pass**: the CI triggered by opening the PR is often still running when the work starts, and must not delay it. If it has already finished, `--watch` returns immediately. Check whether the project's workflows run on draft PRs before assuming a draft skips them.
 
@@ -28,11 +28,11 @@ timeout 240 gh pr checks <n> --watch --interval 30
 
 **A wait watches for a condition; it never counts time.** `gh pr checks --watch`, `gh run watch`, or `until <check>; do sleep 2; done` under `timeout`: the command returns when the awaited thing happens, or when the bound is hit. For the output of a background task, wait for its notification, or watch its output file with `until grep -q <pattern> <file>`.
 
-**Bound every wait, and replay it**: the `Bash` tool cuts off at 600 s, and a command killed by that ceiling does not say whether the checks had finished — it says nothing at all. In slices of a few minutes, each leaves a trace, you stay steerable, and a waiting message is delivered in between.
+**Bound every wait, and replay it**: agents' shell tools cut long commands off after a few minutes, and a command killed by that ceiling does not say whether the checks had finished — it says nothing at all. In slices of a few minutes, each leaves a trace, you stay steerable, and a waiting message is delivered in between.
 
 ## 3. Read the verdict
 
-A red check is a **blocking** finding: read the logs (`gh run view <run-id> --log-failed`), fix, and group the fix with the other fixes in progress rather than making a separate cycle of it. If the failure shows the diff **does not build**, repair that first, then re-read the remaining findings against the repaired code before applying them. Do not interrupt review agents still running: their findings hold on the same diff.
+A red check is a **blocking** finding: read the logs (`gh run view <run-id> --log-failed`), fix, and group the fix with the other fixes in progress rather than making a separate cycle of it. If the failure shows the diff **does not build**, repair that first, then re-read the remaining findings against the repaired code before applying them. Do not interrupt reviewers still running: their findings hold on the same diff.
 
 **Static analysis is not read from the check's status.** A failing code-scanning check (CodeQL or other) shows "fail" without saying what; its alerts are fetched separately, on every pass, even when the check was green the time before — an alert introduced by a fix is found there and nowhere else:
 
