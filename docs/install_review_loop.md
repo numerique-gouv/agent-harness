@@ -61,3 +61,41 @@ It reads the project's agent instructions (`AGENTS.md`, `CLAUDE.md`…) for four
 ```
 
 Review files are working notes, one per PR; ignore their directory in git.
+
+## Add project-specific reviewers
+
+The six reviewers look for what any codebase can get wrong. A project can add reviewers for what only it cares about, like an architecture, a framework's conventions or a specification, and the loop runs them in the same batch, in a fresh context, whenever their condition holds. Their findings are classified by the same rules as everyone else's.
+
+Two steps:
+
+1. **Install the reviewer as a sub-agent** of your agent.
+2. **Name it in the project's agent instructions**, with the condition that triggers it, on the `Extra reviewers` line of the block above. The loop evaluates the condition against the PR's diff at every pass. Without a condition, it runs on every pass.
+
+If a reviewer named there is not installed, the loop says so and carries on with the others.
+
+### Example: `layered-rails-reviewer`
+
+[layered-rails](https://github.com/palkan/layered-rails-skills) reviews Rails code for layered-architecture violations: business logic in controllers, callbacks to extract, god objects, dependencies pointing the wrong way.
+
+In Claude Code:
+
+```
+/plugin marketplace add palkan/layered-rails-skills
+/plugin install layered-rails@layered-rails-skills
+```
+
+On another agent, install the skill, then ask the agent to create the sub-agent:
+
+```bash
+npx skills@latest add palkan/layered-rails-skills --skill layered-rails
+```
+
+> Create a sub-agent named `layered-rails-reviewer`, whose prompt is the one of https://github.com/palkan/layered-rails-skills/blob/master/layered-rails/agents/layered-rails-reviewer.md, pointing at the `layered-rails` skill you just installed.
+
+Then, in the project's agent instructions:
+
+```md
+## Review loop
+
+- Extra reviewers: `layered-rails-reviewer` when the diff touches Ruby under `app/`
+```
