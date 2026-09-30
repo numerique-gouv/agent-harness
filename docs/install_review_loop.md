@@ -4,28 +4,9 @@
 
 ## Install the skills
 
-Pick one route: installing through two of them leaves you with every skill twice.
+Pick one route: installing through both leaves you with every skill twice.
 
 <details open>
-<summary><strong>Any agent, with the <code>skills</code> CLI</strong></summary>
-
-[`skills`](https://github.com/vercel-labs/skills) installs into Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode, Claude Code and [many more](https://github.com/vercel-labs/skills#supported-agents). It asks which skills and which agents; take both skills, since `review-loop` calls `ci-watch`.
-
-```bash
-npx skills@latest add numerique-gouv/agent-harness
-```
-
-Non-interactively, for given agents:
-
-```bash
-npx skills@latest add numerique-gouv/agent-harness --skill '*' -a codex -a cursor
-```
-
-Add `-g` to install for your user rather than for the current project. Pull later changes with `npx skills update`.
-
-</details>
-
-<details>
 <summary><strong>Claude Code, as a plugin</strong></summary>
 
 A managed, read-only bundle that updates when this repository does. From inside a session:
@@ -38,65 +19,29 @@ A managed, read-only bundle that updates when this repository does. From inside 
 </details>
 
 <details>
-<summary><strong>By hand</strong></summary>
+<summary><strong>Editable copies, with the <code>skills</code> CLI</strong></summary>
 
-Copy the folders under `skills/` into the directory your agent reads skills from:
-
-| Agent | Project | User |
-| --- | --- | --- |
-| Codex | `.agents/skills/` | `~/.codex/skills/` |
-| Cursor | `.agents/skills/` | `~/.cursor/skills/` |
-| Gemini CLI | `.agents/skills/` | `~/.gemini/skills/` |
-| GitHub Copilot | `.agents/skills/` | `~/.copilot/skills/` |
-| OpenCode | `.agents/skills/` | `~/.config/opencode/skills/` |
-| Claude Code | `.claude/skills/` | `~/.claude/skills/` |
+[`skills`](https://github.com/vercel-labs/skills) copies the skill files into your project, where you own and edit them, for Claude Code or [any other agent it supports](https://github.com/vercel-labs/skills#supported-agents). Take both skills, since `review-loop` calls `ci-watch`.
 
 ```bash
-git clone https://github.com/numerique-gouv/agent-harness
-cp -r agent-harness/skills/* .agents/skills/
+npx skills@latest add numerique-gouv/agent-harness
 ```
+
+Add `-g` to install for your user rather than for the current project. Pull later changes with `npx skills update`.
 
 </details>
 
 ## Install the reviewers
 
-`review-loop` delegates the review to the six sub-agents of Anthropic's [pr-review-toolkit](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit) (Apache-2.0): `code-reviewer`, `code-simplifier`, `comment-analyzer`, `pr-test-analyzer`, `silent-failure-hunter` and `type-design-analyzer`. They are sub-agents, not skills, so none of the routes above installs them, and the loop stops without them.
-
-<details open>
-<summary><strong>Claude Code</strong></summary>
+`review-loop` delegates the review to the six sub-agents of Anthropic's [pr-review-toolkit](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit) plugin: `code-reviewer`, `code-simplifier`, `comment-analyzer`, `pr-test-analyzer`, `silent-failure-hunter` and `type-design-analyzer`. The loop stops without them.
 
 ```
 /plugin install pr-review-toolkit@claude-plugins-official
 ```
 
-</details>
-
-<details open>
-<summary><strong>Codex, Cursor, Gemini CLI, OpenCode</strong></summary>
-
-[`scripts/install-reviewers.sh`](../scripts/install-reviewers.sh) downloads the six prompts from a pinned commit of pr-review-toolkit and writes them in the agent's own sub-agent format, read-only where the format allows it. From the root of your project:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/numerique-gouv/agent-harness/main/scripts/install-reviewers.sh | sh -s -- codex
-```
-
-Replace `codex` with `cursor`, `gemini` or `opencode`, and add `--global` to install for your user rather than for the project:
-
-| Agent | Project | User (`--global`) | Format |
-| --- | --- | --- | --- |
-| Codex | `.codex/agents/` | `~/.codex/agents/` | [TOML](https://learn.chatgpt.com/docs/agent-configuration/subagents) |
-| Cursor | `.cursor/agents/` | `~/.cursor/agents/` | [Markdown](https://cursor.com/docs/context/subagents) |
-| Gemini CLI | `.gemini/agents/` | `~/.gemini/agents/` | [Markdown](https://geminicli.com/docs/core/subagents/) |
-| OpenCode | `.opencode/agents/` | `~/.config/opencode/agents/` | [Markdown](https://opencode.ai/docs/agents/) |
-
-Run it again to update. For another agent that supports sub-agents, copy the body of each [upstream file](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit/agents) — everything below its frontmatter — into that agent's sub-agent format, under the same name.
-
-</details>
-
 ## Prerequisites
 
 - The [`gh`](https://cli.github.com) CLI, authenticated on the repository.
-- An agent that can start sub-agents: `review-loop` gives each reviewer a fresh context, and stops rather than reviewing its own work.
 
 ## Configure it for a project
 

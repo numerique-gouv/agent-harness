@@ -1,6 +1,6 @@
 # agent-harness
 
-Reusable skills for coding agents, extracted from the harness a team runs daily on a spec-driven Rails project and stripped of everything specific to it. They follow the open [Agent Skills](https://agentskills.io) format — one folder per skill, a `SKILL.md` and the files it points to — so any agent that reads skills can use them. Each is small, readable, and meant to be adapted.
+Reusable skills for [Claude Code](https://code.claude.com), extracted from the harness a team runs daily on a spec-driven Rails project and stripped of everything specific to it. They follow the open [Agent Skills](https://agentskills.io) format — one folder per skill, a `SKILL.md` and the files it points to. Each is small, readable, and meant to be adapted.
 
 ## /review-loop
 
