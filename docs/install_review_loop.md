@@ -67,7 +67,7 @@ Review files are working notes, one per PR; ignore their directory in git.
 
 ## Add project-specific reviewers
 
-The six reviewers look for what any codebase can get wrong. A project can add reviewers for what only it cares about, like an architecture, a framework's conventions or a standard, and the loop runs them in the same batch, in a fresh context, whenever their condition holds. Their findings are classified by the same rules as everyone else's.
+The six reviewers look for what any codebase can get wrong. A project can add reviewers for what only it cares about, like an architecture, a framework's conventions or a standard, and the loop runs them in the same batch, in a fresh context, whenever their condition holds.
 
 Two steps:
 
