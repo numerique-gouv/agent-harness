@@ -20,7 +20,7 @@ Read what exists before asking anything; never ask what the repository answers.
   - `gh repo view --json viewerPermission -q .viewerPermission` — `WRITE`, `MAINTAIN` or `ADMIN`; anything else cannot push to a branch of this repository;
   - `git push --dry-run origin HEAD` — git's own credentials reach the remote and are accepted for a push. `gh` being logged in does not prove it: git may use other credentials, or none.
 - **The test command**: a `Makefile` target, the `scripts` of `package.json`, a `Rakefile`, `bin/`, the CI workflows under `.github/workflows/` — what CI runs is the best evidence of what the tests are.
-- **Standards implemented**: external documents the code must comply with, as the instructions file or `docs/` name them — a standard, an RFC, a regulation, a published API contract. Not the tests: in many stacks "specs" are tests, which is why this line never says "specifications".
+- **Standards implemented**: external documents the code must comply with, as the instructions file or `docs/` name them — a standard, an RFC, a regulation, a published API contract.
 - **The stack**: `Gemfile`, `package.json`, `pyproject.toml`, `go.mod`… It decides which project-specific reviewers are worth proposing.
 - **`.gitignore`**: does it already ignore a directory for working notes?
 
