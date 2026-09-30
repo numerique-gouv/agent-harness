@@ -14,4 +14,4 @@ Runs `review → fix → review → fix…` on an open pull request until a pass
 
 Ask your agent to run it on a PR ("run review-loop on this PR"), or type `/review-loop` where your agent has slash commands.
 
-**[Install `/review-loop`](docs/install_review_loop.md)** — the skills, the reviewers, and how to configure it for a project.
+**[Install `/review-loop`](docs/install_review_loop.md)** — the skills, then `/setup-review-loop`, which guides you through the rest: reviewers, test command, review files, project-specific reviewers.

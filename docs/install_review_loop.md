@@ -1,6 +1,9 @@
 # Installing `/review-loop`
 
-`/review-loop` is two skills — `review-loop` and `ci-watch`, which it calls — and six reviewer sub-agents it delegates the review to. Install both, check the prerequisites, then tell the skill what it needs to know about your project.
+`/review-loop` is two skills — `review-loop` and `ci-watch`, which it calls — and six reviewer sub-agents it delegates the review to. A third skill, `setup-review-loop`, sets a repository up for it.
+
+> [!TIP]
+> **Install the skills, then type `/setup-review-loop`.** It checks that the reviewers and `gh` are there and offers to install what is missing, then settles with you, one question at a time, the test command, the specifications, where review files go and whether git ignores them, and any project-specific reviewer — and writes it all into your `CLAUDE.md` or `AGENTS.md`. The sections below are the same steps, by hand.
 
 ## Install the skills
 
@@ -21,7 +24,7 @@ A managed, read-only bundle that updates when this repository does. From inside 
 <details>
 <summary><strong>For any agent, with the <code>skills</code> CLI</strong></summary>
 
-[`skills`](https://github.com/vercel-labs/skills) copies the skill files into your project, where you own and edit them, for [any other agent it supports](https://github.com/vercel-labs/skills#supported-agents). Take both `review-loop` and `ci-watch`.
+[`skills`](https://github.com/vercel-labs/skills) copies the skill files into your project, where you own and edit them, for [any other agent it supports](https://github.com/vercel-labs/skills#supported-agents). Take `review-loop`, `ci-watch` and `setup-review-loop`.
 
 ```bash
 npx skills@latest add numerique-gouv/agent-harness

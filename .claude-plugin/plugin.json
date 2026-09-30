@@ -10,6 +10,7 @@
   "keywords": ["code-review", "pull-request", "ci", "git"],
   "skills": [
     "./skills/review-loop",
-    "./skills/ci-watch"
+    "./skills/ci-watch",
+    "./skills/setup-review-loop"
   ]
 }
