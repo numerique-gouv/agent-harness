@@ -6,7 +6,7 @@
 
 Pick one route: installing through both leaves you with every skill twice.
 
-<details open>
+<details>
 <summary><strong>Claude Code, as a plugin</strong></summary>
 
 A managed, read-only bundle that updates when this repository does. From inside a session:
