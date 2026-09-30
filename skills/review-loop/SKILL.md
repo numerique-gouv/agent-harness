@@ -44,7 +44,7 @@ Repeat as long as the last pass confirmed at least one **blocking** finding; sto
 
 6. Was a blocking finding confirmed in this pass (review **or** CI)?
    - Yes → back to step 1 for a new pass — unless five passes have followed one another without any bounce or oscillation showing from one to the next: [`non-convergence.md`](non-convergence.md) then says to stop and report, with the cost.
-   - No → leave only once the CI of the last push is **green**: this is the one moment it is actually waited for. Red → blocking, back to step 1. Green → return to the caller.
+   - No → leave only once the CI of the last push is **green**: this is the one moment it is actually waited for. If step 5 pushed fixes, the verdict collected at step 4b belongs to the previous head: invoke `ci-watch` again on the head just pushed, and wait for its verdict. Red → blocking, back to step 1. Green → return to the caller.
 
    **And the review file exists on disk, one section per pass**: an `ls <reviews-dir>` before leaving, not the memory of having written it. If it is missing, the pass never happened for anyone else — write it from what you have, then carry on. Without it, the false positives of a pass are relayed to nobody, and the next loop on the same code pays for them again.
 

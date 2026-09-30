@@ -9,7 +9,7 @@ Input: the PR URL or number. CI is one more reviewer, not a red light to wait at
 
 ## 1. Watch, without waiting
 
-Run `gh pr checks <url> --watch` **in the background** if your agent can run a command without blocking on it, then carry on with whatever is left to do. In the seconds after a push, `gh pr checks` answers `no checks reported`: the workflows are not registered yet. Wait for that condition rather than guessing a delay — `timeout 120 sh -c 'until gh pr checks <n> >/dev/null 2>&1; do sleep 5; done'` before the `--watch`. CI and review work on the same diff without depending on each other; running them in parallel saves a full CI run per pass.
+Run `gh pr checks <url> --watch` **in the background** if your agent can run a command without blocking on it, then carry on with whatever is left to do. In the seconds after a push, `gh pr checks` answers `no checks reported`: the workflows are not registered yet. Wait for that message to go away rather than guessing a delay — `timeout 120 sh -c 'until ! gh pr checks <n> 2>&1 | grep -q "no checks reported"; do sleep 5; done'` before the `--watch`. The exit code of `gh pr checks` cannot serve here: it is 8 while checks are pending and 1 when one has failed, so a loop on it waits for green, not for the checks to exist. CI and review work on the same diff without depending on each other; running them in parallel saves a full CI run per pass.
 
 **This holds from the first pass**: the CI triggered by opening the PR is often still running when the work starts, and must not delay it. If it has already finished, `--watch` returns immediately. Check whether the project's workflows run on draft PRs before assuming a draft skips them.
 
@@ -22,7 +22,9 @@ Run `gh pr checks <url> --watch` **in the background** if your agent can run a c
 
 ```sh
 timeout 240 gh pr checks <n> --watch --interval 30
-#   0 → all green          1 → a check failed
+#   0 → all green
+#   1 → a check failed — or no checks are registered yet: read the output,
+#       and on "no checks reported" wait for them as section 1 does
 # 124 → still running, run the same command again
 ```
 
