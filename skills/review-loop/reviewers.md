@@ -40,7 +40,7 @@ Launch in parallel where your agent allows it:
 
 A project may ask, in its agent instructions, for extra reviewers with the condition that triggers each — for instance an architecture reviewer such as `layered-rails-reviewer`, from [layered-rails](https://github.com/palkan/layered-rails-skills), whenever the diff touches Ruby under `app/`. Add them to the same batch, on the same terms: a fresh context, never your own.
 
-Their confirmed findings are **blocking**, as [`blocking.md`](blocking.md) says: the project asked for them to enforce its own rules.
+Their findings are classified like any other, by [`blocking.md`](blocking.md).
 
 If a project-specific reviewer is not available, say so and carry on with the others.
 

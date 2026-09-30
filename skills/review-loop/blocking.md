@@ -8,7 +8,6 @@ The reviewers do not label their own findings blocking or non-blocking — that 
   - a correctness bug;
   - a real security flaw;
   - a violation of a **normative** rule of a specification the project implements (a rule that constrains what the code does or emits, not a stylistic one);
-  - a confirmed finding of a [project-specific reviewer](reviewers.md#project-specific-reviewers): the project asked for that reviewer to enforce its own rules;
   - anything that would break CI if left as is.
 - **Non-blocking**, everything else — explicitly including:
   - **any error in a comment or in documentation**, even a factually wrong statement, a wrong attribution, a security mechanism described misleadingly, or a misquoted specification rule. Text stays text, never executed code, so never blocking in itself — fixed like any confirmed finding, but it does not force another pass. Treating textual errors as if they cost as much as a code bug is how a documentation-only PR ends up taking five passes;
