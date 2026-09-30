@@ -1,0 +1,16 @@
+{
+  "name": "agent-harness",
+  "version": "0.1.0",
+  "description": "Reusable skills and agents for shipping pull requests with Claude Code: a converging review loop, background CI watching, a safe history rewrite.",
+  "author": {
+    "name": "numerique-gouv",
+    "url": "https://github.com/numerique-gouv"
+  },
+  "repository": "https://github.com/numerique-gouv/agent-harness",
+  "keywords": ["code-review", "pull-request", "ci", "git"],
+  "skills": [
+    "./skills/review-loop",
+    "./skills/ci-watch",
+    "./skills/rewrite-history"
+  ]
+}
