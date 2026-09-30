@@ -6,7 +6,7 @@ Reusable skills for [Claude Code](https://code.claude.com), extracted from the h
 
 Runs `review → fix → review → fix…` on an open pull request until a pass confirms no blocking finding.
 
-- **Independent reviewers.** Each pass hands the PR's full diff to up to six reviewer sub-agents, each in a fresh context — correctness, silent failures, tests, comments, type design, simplification — chosen from what the diff actually touches. A project can add its own reviewers.
+- **Independent reviewers.** Each pass hands the PR's full diff to reviewer sub-agents, each in a fresh context: a correctness reviewer and a simplifier on every pass; reviewers of error handling, tests, comments and type design when the diff touches them; and any reviewer the project adds, on the condition it sets.
 - **Fixes by the author.** The agent that wrote the code confirms or rejects each finding against the cited code, classifies it blocking or not, and fixes it with the most mechanical change possible. A behavioural fix counts as verified only once its test has been seen going red without it.
 - **CI in the background.** The companion skill [`ci-watch`](skills/ci-watch/SKILL.md) watches the PR's checks while the review runs; a red check is one more blocking finding.
 - **A written trail.** Every pass is recorded in one review file per PR — reviewers launched, findings fixed, false positives rejected and why — and rejected findings are handed to the next pass's reviewers so they are not raised again.
