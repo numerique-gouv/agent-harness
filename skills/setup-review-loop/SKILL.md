@@ -1,6 +1,6 @@
 ---
 name: setup-review-loop
-description: Sets a repository up for review-loop, in conversation with the user — checks the skills and reviewers are installed, then settles the test command, the specifications, the review files and their .gitignore line, and any project-specific reviewer, and writes the "Review loop" block into the project's agent instructions. Run once per repository, and again to change the setup.
+description: Sets a repository up for review-loop, in conversation with the user — checks the skills and reviewers are installed, then settles the test command, the standards implemented, the review files and their .gitignore line, and any project-specific reviewer, and writes the "Review loop" block into the project's agent instructions. Run once per repository, and again to change the setup.
 disable-model-invocation: true
 ---
 
@@ -15,9 +15,12 @@ Read what exists before asking anything; never ask what the repository answers.
 - **The agent instructions file**: `CLAUDE.md` or `AGENTS.md` at the root. Is there already a `## Review loop` block? If so, this run updates it.
 - **The skills**: are `review-loop` and `ci-watch` both among your skills?
 - **The reviewers**: are the six sub-agents of [pr-review-toolkit](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit) — `code-reviewer`, `code-simplifier`, `comment-analyzer`, `pr-test-analyzer`, `silent-failure-hunter`, `type-design-analyzer` — among the sub-agents you can launch?
-- **`gh`**: `gh auth status`, and `gh repo view` to confirm it reaches this repository.
+- **`gh`, and the right to push**: `review-loop` reads the PR with `gh` and pushes its fixes to the PR's branch with `git`. Check all three, none of which writes anything:
+  - `gh auth status` — installed, logged in, and on which account;
+  - `gh repo view --json viewerPermission -q .viewerPermission` — `WRITE`, `MAINTAIN` or `ADMIN`; anything else cannot push to a branch of this repository;
+  - `git push --dry-run origin HEAD` — git's own credentials reach the remote and are accepted for a push. `gh` being logged in does not prove it: git may use other credentials, or none.
 - **The test command**: a `Makefile` target, the `scripts` of `package.json`, a `Rakefile`, `bin/`, the CI workflows under `.github/workflows/` — what CI runs is the best evidence of what the tests are.
-- **Specifications**: what the instructions file or `docs/` say the project implements — a standard, an RFC, a regulation, a published API contract.
+- **Standards implemented**: external documents the code must comply with, as the instructions file or `docs/` name them — a standard, an RFC, a regulation, a published API contract. Not the tests: in many stacks "specs" are tests, which is why this line never says "specifications".
 - **The stack**: `Gemfile`, `package.json`, `pyproject.toml`, `go.mod`… It decides which project-specific reviewers are worth proposing.
 - **`.gitignore`**: does it already ignore a directory for working notes?
 
@@ -29,13 +32,13 @@ Summarise what the exploration found, then take the sections in order. One secti
 
 - in Claude Code, the reviewers install with `claude plugin install pr-review-toolkit@claude-plugins-official` — run it with the user's agreement, or give them `/plugin install pr-review-toolkit@claude-plugins-official` to type;
 - on another agent, offer to create the six sub-agents yourself, in your own sub-agent format, from the [upstream files](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit/agents), keeping their names and prompts;
-- `gh` is the user's to install and authenticate: give the command, do not run a login.
+- `gh` and the git credentials are the user's to set up — never run a login, never handle a token. Say which check failed and what fixes it: `gh auth login` for `gh`; `gh auth setup-git` when `gh` is logged in but git has no credentials for the remote; a token with the `repo` scope, plus `workflow` if the PR may touch `.github/workflows/`; or a fork, when the account can only read this repository. Once the user says it is done, run the three checks again.
 
 Newly installed sub-agents may only be visible from a new session; say so rather than checking for them again in this one. `review-loop` stops without the reviewers, so if the user declines, carry on with the setup but say it will not run until they are installed.
 
 **B. Test command.** Propose what CI runs, or the obvious runner of the stack. One command, the one a contributor runs before pushing.
 
-**C. Specifications.** If the project implements some, propose their links: a violation of one of their normative rules becomes a blocking finding. If none, skip the line.
+**C. Standards implemented.** If the project implements some, propose their links: a violation of one of their normative rules becomes a blocking finding. If none, skip the line.
 
 **D. Review files.** Recommend `.scratch/reviews/`, or the directory the project already uses for working notes. Then ask whether to ignore it in git — recommended **yes**: review files are working notes, one per PR, and age badly in history. On yes, add the line to `.gitignore`, unless a pattern there already covers it.
 
@@ -56,7 +59,7 @@ Show the user, in one message, everything this run will write:
   ## Review loop
 
   - Test command: `<command>`
-  - Specifications implemented: <links>
+  - Standards implemented: <links>
   - Extra reviewers: `<name>` when <condition>
   - Review files: `<directory>`
   ```

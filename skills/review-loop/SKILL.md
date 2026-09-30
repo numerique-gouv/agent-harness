@@ -18,7 +18,7 @@ The PR URL, as an argument. Without one, derive it with `gh pr view --json url -
 Read the project's agent instructions (`AGENTS.md`, `CLAUDE.md`, or whatever file your agent loads) before the first pass, and take from it, when present:
 
 - **the test command** (`make test`, `npm test`, `bundle exec rspec`…); without one, look for the obvious runner of the stack and say which one you used;
-- **the specifications the project implements**, if any — they decide what counts as a normative violation in [`blocking.md`](blocking.md) and where to look for the general rule in [`non-convergence.md`](non-convergence.md);
+- **the standards the project implements**, if any — external documents the code must comply with (standards, RFCs, regulations, API contracts); they decide what counts as a normative violation in [`blocking.md`](blocking.md) and where to look for the general rule in [`non-convergence.md`](non-convergence.md);
 - **extra reviewers** the project asks for, with their condition — see [`reviewers.md`](reviewers.md#project-specific-reviewers);
 - **where review files go**, if the project names a directory; otherwise `.scratch/reviews/`.
 

@@ -3,7 +3,7 @@
 `/review-loop` is two skills — `review-loop` and `ci-watch`, which it calls — and six reviewer sub-agents it delegates the review to. A third skill, `setup-review-loop`, sets a repository up for it.
 
 > [!TIP]
-> **Install the skills, then type `/setup-review-loop`.** It checks that the reviewers and `gh` are there and offers to install what is missing, then settles with you, one question at a time, the test command, the specifications, where review files go and whether git ignores them, and any project-specific reviewer — and writes it all into your `CLAUDE.md` or `AGENTS.md`. The sections below are the same steps, by hand.
+> **Install the skills, then type `/setup-review-loop`.** It checks that the reviewers and `gh` are there and offers to install what is missing, then settles with you, one question at a time, the test command, the standards the project implements, where review files go and whether git ignores them, and any project-specific reviewer — and writes it all into your `CLAUDE.md` or `AGENTS.md`. The sections below are the same steps, by hand.
 
 ## Install the skills
 
@@ -58,7 +58,7 @@ It reads the project's agent instructions (`AGENTS.md`, `CLAUDE.md`…) for four
 ## Review loop
 
 - Test command: `make test`
-- Specifications implemented: <links> — a violation of a normative rule is a blocking finding
+- Standards implemented: <links> — external documents the code must comply with (standards, RFCs, regulations, API contracts); a violation of one of their normative rules is a blocking finding
 - Extra reviewers: `layered-rails-reviewer` when the diff touches Ruby under `app/`
 - Review files: `.scratch/reviews/`
 ```
@@ -67,7 +67,7 @@ Review files are working notes, one per PR; ignore their directory in git.
 
 ## Add project-specific reviewers
 
-The six reviewers look for what any codebase can get wrong. A project can add reviewers for what only it cares about, like an architecture, a framework's conventions or a specification, and the loop runs them in the same batch, in a fresh context, whenever their condition holds. Their findings are classified by the same rules as everyone else's.
+The six reviewers look for what any codebase can get wrong. A project can add reviewers for what only it cares about, like an architecture, a framework's conventions or a standard, and the loop runs them in the same batch, in a fresh context, whenever their condition holds. Their findings are classified by the same rules as everyone else's.
 
 Two steps:
 

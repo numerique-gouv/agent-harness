@@ -4,7 +4,7 @@ Read at step 4, on the first confirmed finding of the loop, and at step 5 before
 
 **Prefer the most mechanical fix to a rewrite**: delete rather than rephrase, link to the document that already owns the description rather than restating it, fix the exact point rather than reworking the whole sentence or paragraph around it. Every new line of prose written to fix a finding is itself a new chance of a finding at the next pass — a minimal fix closes that door instead of reopening it.
 
-**A fix that asserts an external fact is checked as it is written, not at the next pass.** As soon as a fix states something the repository does not prove — a requirement of a specification and its identifier, a cardinality, the content of a certificate, the behaviour of a standard-library class, a count in a fixture — go and check it at the source **before** writing it, and note in the review file how it was checked (fetching the chapter, `openssl x509`, `grep` on the fixture). Two corollaries:
+**A fix that asserts an external fact is checked as it is written, not at the next pass.** As soon as a fix states something the repository does not prove — a requirement of a standard and its identifier, a cardinality, the content of a certificate, the behaviour of a standard-library class, a count in a fixture — go and check it at the source **before** writing it, and note in the review file how it was checked (fetching the chapter, `openssl x509`, `grep` on the fixture). Two corollaries:
 
 - **never a quotation you have not read in the source itself** — paraphrase what you actually observed;
 - **never a figure describing an external system** ("the eleven other member states"): it is wrong or will become so, and the sentence stands without it.
