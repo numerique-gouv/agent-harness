@@ -7,7 +7,7 @@
 Pick one route: installing through both leaves you with every skill twice.
 
 <details>
-<summary><strong>Claude Code, as a plugin</strong></summary>
+<summary><strong>For Claude Code, as a plugin</strong></summary>
 
 A managed, read-only bundle that updates when this repository does. From inside a session:
 
@@ -19,9 +19,9 @@ A managed, read-only bundle that updates when this repository does. From inside 
 </details>
 
 <details>
-<summary><strong>Editable copies, with the <code>skills</code> CLI</strong></summary>
+<summary><strong>For any agent, with the <code>skills</code> CLI</strong></summary>
 
-[`skills`](https://github.com/vercel-labs/skills) copies the skill files into your project, where you own and edit them, for Claude Code or [any other agent it supports](https://github.com/vercel-labs/skills#supported-agents). Take both skills, since `review-loop` calls `ci-watch`.
+[`skills`](https://github.com/vercel-labs/skills) copies the skill files into your project, where you own and edit them, for [any other agent it supports](https://github.com/vercel-labs/skills#supported-agents). Take both `review-loop` and `ci-watch`.
 
 ```bash
 npx skills@latest add numerique-gouv/agent-harness
